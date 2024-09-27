@@ -32,6 +32,9 @@ body {
   .button{
     width: 120px;
     border-radius: 5px;
+    margin-left: 79px;
+    margin-top: 8px;
+    padding: 6px;
   }
   
   @media (min-width: 600px) {
@@ -65,7 +68,8 @@ body {
   }
   
   .notes-header button {
-    font-size: 16px;
+    font-size: 18px;
+   
     background: transparent;
     border: none;
     cursor: pointer;
