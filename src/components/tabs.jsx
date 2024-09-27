@@ -4,6 +4,8 @@ import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import { useState } from 'react';
+import EditIcon from '@mui/icons-material/Edit';
+import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import '../styles/BD.css';
 
 export function CustomTabPanel(props) {
@@ -53,6 +55,11 @@ export function BasicTabs() {
   ]);
   const [archivedNotes, setArchivedNotes] = useState([]); // Store archived notes
 
+  // States for editing functionality
+  const [editingNoteId, setEditingNoteId] = useState(null); // To track which note is being edited
+  const [editedTitle, setEditedTitle] = useState(''); // To hold the edited title
+  const [editedContent, setEditedContent] = useState(''); // To hold the edited content
+
   // Add a new note
   const addNote = (event) => {
     event.preventDefault();
@@ -82,6 +89,28 @@ export function BasicTabs() {
       setArchivedNotes([...archivedNotes, noteToArchive]);
       setListOfNotes(listOfNotes.filter(note => note.id !== noteId));
     }
+  };
+
+  // Handle editing a note
+  const handleEditOption = (noteId) => {
+    const noteToEdit = listOfNotes.find(note => note.id === noteId); // Find the note by id
+    if (noteToEdit) {
+      setEditingNoteId(noteId); // Set the note ID to the state
+      setEditedTitle(noteToEdit.title); // Set the title to be edited
+      setEditedContent(noteToEdit.content); // Set the content to be edited
+    }
+  };
+
+  // Save the edited note
+  const saveEditedNote = () => {
+    setListOfNotes(prevNotes =>
+      prevNotes.map(note => 
+        note.id === editingNoteId ? { ...note, title: editedTitle, content: editedContent } : note
+      )
+    );
+    setEditingNoteId(null); // Reset editing state
+    setEditedTitle(''); // Clear title input
+    setEditedContent(''); // Clear content input
   };
 
   return (
@@ -121,15 +150,38 @@ export function BasicTabs() {
           <div className="notes-grid">
             {listOfNotes.map((note) => (
               <div className="note-item" key={note.id}>
-                <div className="notes-header">
-                  <Checkbox
-                    sx={{ borderRadius: 0, boxShadow: 0, width: 24, ml: 1 }}
-                    onChange={() => handleCheckboxChange(note.id)} // Archive note on checkbox check
-                  />
-                  <button onClick={() => abort(note.id)}>x</button>
-                </div>
-                <h2>{note.title}</h2>
-                <p>{note.content}</p>
+                {editingNoteId === note.id ? (
+                  <div>
+                    <input
+                      value={editedTitle}
+                      onChange={(event) => setEditedTitle(event.target.value)}
+                      required
+                    />
+                    <textarea
+                      value={editedContent}
+                      onChange={(event) => setEditedContent(event.target.value)}
+                      required
+                    />
+                    <button onClick={saveEditedNote}>
+                      <SaveAltIcon />
+                    </button>
+                  </div>
+                ) : (
+                  <div>
+                    <div className="notes-header">
+                      <Checkbox
+                        sx={{ borderRadius: 0, boxShadow: 0, width: 24, ml: 1 }}
+                        onChange={() => handleCheckboxChange(note.id)} // Archive note on checkbox check
+                      />
+                      <button onClick={() => handleEditOption(note.id)}>
+                        <EditIcon />
+                      </button>
+                      <button onClick={() => abort(note.id)}>x</button>
+                    </div>
+                    <h2>{note.title}</h2>
+                    <p>{note.content}</p>
+                  </div>
+                )}
               </div>
             ))}
           </div>
