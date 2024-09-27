@@ -99,7 +99,7 @@ export function BasicTabs() {
               required
             />
 
-            <button type="submit">Add Note</button>
+            <button type="submit" class="button">Add Note</button>
           </form>
           </div>
           {/* Display list of notes */}

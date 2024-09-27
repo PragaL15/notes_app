@@ -23,11 +23,15 @@ body {
   }
   
   .text input {
-    border-bottom: 1px solid #ccc; /* Add a border between the input and textarea */
+    border-bottom: 1px solid #ccc; 
   }
   
   .text textarea {
-    resize: none; /* Disable resizing for the textarea if required */
+    resize: none; 
+  }
+  .button{
+    width: 120px;
+    border-radius: 5px;
   }
   
   @media (min-width: 600px) {
