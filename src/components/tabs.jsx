@@ -7,6 +7,7 @@ import { useState } from 'react';
 import EditIcon from '@mui/icons-material/Edit';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
+import ColorChips from '../components/footer'
 import '../styles/BD.css';
 
 export function CustomTabPanel(props) {
@@ -189,6 +190,7 @@ export function BasicTabs() {
                         <EditIcon />
                       </button>
                       <button onClick={() => abort(note.id)}>x</button>
+                      <ColorChips/>
                     </div>
                     <h2>{note.title}</h2>
                     <p>{note.content}</p>
