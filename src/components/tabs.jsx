@@ -5,6 +5,7 @@ import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import { useState } from 'react';
 import EditIcon from '@mui/icons-material/Edit';
+import AutorenewIcon from '@mui/icons-material/Autorenew';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import '../styles/BD.css';
 
@@ -39,8 +40,8 @@ function a11yProps(index) {
 
 export function BasicTabs() {
   const [value, setValue] = useState(0); // Controls which tab is displayed
-  const [title, setTitle] = useState(''); // Note title
-  const [text, setText] = useState(''); // Note text
+  const [title, setTitle] = useState(''); 
+  const [text, setText] = useState(''); 
   const [listOfNotes, setListOfNotes] = useState([
     {
       id: 1,
@@ -54,13 +55,11 @@ export function BasicTabs() {
     },
   ]);
   const [archivedNotes, setArchivedNotes] = useState([]); // Store archived notes
-
-  // States for editing functionality
   const [editingNoteId, setEditingNoteId] = useState(null); // To track which note is being edited
-  const [editedTitle, setEditedTitle] = useState(''); // To hold the edited title
-  const [editedContent, setEditedContent] = useState(''); // To hold the edited content
+  const [editedTitle, setEditedTitle] = useState(''); 
+  const [editedContent, setEditedContent] = useState(''); 
 
-  // Add a new note
+
   const addNote = (event) => {
     event.preventDefault();
     const newNote = { id: Date.now(), title, content: text };
@@ -112,6 +111,19 @@ export function BasicTabs() {
     setEditedTitle(''); // Clear title input
     setEditedContent(''); // Clear content input
   };
+
+  const revokeArchive = (noteId) => {
+    // Find the note in the archivedNotes array
+    const noteToRemove = archivedNotes.find(note => note.id === noteId);
+  
+    if (noteToRemove) {
+      // Remove the note from the archivedNotes array
+      setArchivedNotes(archivedNotes.filter(note => note.id !== noteId));
+     //to add those notes back to the Non-Archived notes array
+      setListOfNotes([...listOfNotes, noteToRemove]);
+    }
+  };
+  
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -195,6 +207,7 @@ export function BasicTabs() {
             <div className="note-item" key={note.id}>
               <h2>{note.title}</h2>
               <p>{note.content}</p>
+              <AutorenewIcon onClick= {() =>revokeArchive(note.id)}/>
             </div>
           ))}
         </div>
@@ -207,3 +220,7 @@ export function BasicTabs() {
     </Box>
   );
 }
+
+
+//if we store adding the note and editing the note in the same useState then while editing it will be displayed in
+//text input field. 

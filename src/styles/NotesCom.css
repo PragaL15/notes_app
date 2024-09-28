@@ -1,6 +1,6 @@
-.notes-grid{
-  background-color: aliceblue;
-}
+ .notes-grid{
+   background-color: transparent;
+} 
 .flex{
   display: flex;
   
@@ -8,4 +8,5 @@
 .NotesAll{
   margin-top: 80px;
  margin-left: 100px;
+  
 }
