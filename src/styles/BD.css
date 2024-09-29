@@ -10,7 +10,7 @@ body {
   .text form {
     display: flex;
     flex-direction: column; /* Aligns input and textarea one below the other */
-    border: 2px solid #ccc; /* Common border around both input and textarea */
+    border: 2px solid #eaeaea; /* Common border around both input and textarea */
     padding: 10px;
   }
   
@@ -24,14 +24,14 @@ body {
     border: none; 
     width: 40%; 
     padding: 10px;
-    background-color: #ccc;
+    background-color: #efefef;
   }
   .text textarea {
     margin-left:80px ;
     border: none; 
     width: 40%; 
     padding: 10px;
-    background-color: #ccc;
+    background-color:#efefef;
   }
   
 

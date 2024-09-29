@@ -1,14 +1,14 @@
-import PropTypes from 'prop-types';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Box from '@mui/material/Box';
-import Checkbox from '@mui/material/Checkbox';
-import { useState } from 'react';
-import EditIcon from '@mui/icons-material/Edit';
-import AutorenewIcon from '@mui/icons-material/Autorenew';
-import SaveAltIcon from '@mui/icons-material/SaveAlt';
-import ColorChips from '../components/footer'
-import '../styles/BD.css';
+import PropTypes from "prop-types";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Box from "@mui/material/Box";
+import Checkbox from "@mui/material/Checkbox";
+import { useState } from "react";
+import EditIcon from "@mui/icons-material/Edit";
+import AutorenewIcon from "@mui/icons-material/Autorenew";
+import SaveAltIcon from "@mui/icons-material/SaveAlt";
+import Chip from "@mui/material/Chip";
+import "../styles/BD.css";
 
 export function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -35,39 +35,55 @@ CustomTabPanel.propTypes = {
 function a11yProps(index) {
   return {
     id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
   };
+}
+
+function getCurrentFormattedDate() {
+  const currentDate = new Date();
+
+  // Formatting options for day, month (short name), and year
+  const options = { day: "2-digit", month: "short", year: "numeric" };
+
+  // Format the date as "12 Nov 2022"
+  return currentDate.toLocaleDateString("en-US", options);
 }
 
 export function BasicTabs() {
   const [value, setValue] = useState(0); // Controls which tab is displayed
-  const [title, setTitle] = useState(''); 
-  const [text, setText] = useState(''); 
+  const [title, setTitle] = useState("");
+  const [text, setText] = useState("");
   const [listOfNotes, setListOfNotes] = useState([
     {
       id: 1,
-      title: 'Intro',
-      content: 'This is Pragalya',
+      title: "Intro",
+      content: "This is Pragalya",
+      date: getCurrentFormattedDate(), // Initial note with date
     },
     {
       id: 2,
-      title: 'Preface',
-      content: 'Know about the book',
+      title: "Preface",
+      content: "Know about the book",
+      date: getCurrentFormattedDate(), 
     },
   ]);
   const [archivedNotes, setArchivedNotes] = useState([]); // Store archived notes
   const [editingNoteId, setEditingNoteId] = useState(null); // To track which note is being edited
-  const [editedTitle, setEditedTitle] = useState(''); 
-  const [editedContent, setEditedContent] = useState(''); 
-
+  const [editedTitle, setEditedTitle] = useState("");
+  const [editedContent, setEditedContent] = useState("");
 
   const addNote = (event) => {
     event.preventDefault();
-    const newNote = { id: Date.now(), title, content: text };
+    const newNote = {
+      id: Date.now(),
+      title,
+      content: text,
+      date: getCurrentFormattedDate(), // Add the current date when the note is created
+    };
 
     setListOfNotes([...listOfNotes, newNote]); // Add the new note
-    setTitle(''); // Reset title input
-    setText('');  // Reset text input
+    setTitle(""); // Reset title input
+    setText(""); // Reset text input
   };
 
   // Handle deleting a note
@@ -83,17 +99,17 @@ export function BasicTabs() {
 
   // Handle checkbox change for archiving notes
   const handleCheckboxChange = (noteId) => {
-    const noteToArchive = listOfNotes.find(note => note.id === noteId); // Find the note by id
+    const noteToArchive = listOfNotes.find((note) => note.id === noteId); // Find the note by id
     if (noteToArchive) {
       // Move note to archive and remove from the current list
       setArchivedNotes([...archivedNotes, noteToArchive]);
-      setListOfNotes(listOfNotes.filter(note => note.id !== noteId));
+      setListOfNotes(listOfNotes.filter((note) => note.id !== noteId));
     }
   };
 
   // Handle editing a note
   const handleEditOption = (noteId) => {
-    const noteToEdit = listOfNotes.find(note => note.id === noteId); // Find the note by id
+    const noteToEdit = listOfNotes.find((note) => note.id === noteId); // Find the note by id
     if (noteToEdit) {
       setEditingNoteId(noteId); // Set the note ID to the state
       setEditedTitle(noteToEdit.title); // Set the title to be edited
@@ -103,34 +119,39 @@ export function BasicTabs() {
 
   // Save the edited note
   const saveEditedNote = () => {
-    setListOfNotes(prevNotes =>
-      prevNotes.map(note => 
-        note.id === editingNoteId ? { ...note, title: editedTitle, content: editedContent } : note
+    setListOfNotes((prevNotes) =>
+      prevNotes.map((note) =>
+        note.id === editingNoteId
+          ? { ...note, title: editedTitle, content: editedContent, date: getCurrentFormattedDate() } // Update date on edit
+          : note
       )
     );
     setEditingNoteId(null); // Reset editing state
-    setEditedTitle(''); // Clear title input
-    setEditedContent(''); // Clear content input
+    setEditedTitle(""); // Clear title input
+    setEditedContent(""); // Clear content input
   };
 
   const revokeArchive = (noteId) => {
     // Find the note in the archivedNotes array
-    const noteToRemove = archivedNotes.find(note => note.id === noteId);
-  
+    const noteToRemove = archivedNotes.find((note) => note.id === noteId);
+
     if (noteToRemove) {
       // Remove the note from the archivedNotes array
-      setArchivedNotes(archivedNotes.filter(note => note.id !== noteId));
-     //to add those notes back to the Non-Archived notes array
+      setArchivedNotes(archivedNotes.filter((note) => note.id !== noteId));
+      // Add those notes back to the Non-Archived notes array
       setListOfNotes([...listOfNotes, noteToRemove]);
     }
   };
-  
 
   return (
-    <Box sx={{ width: '100%' }}>
+    <Box sx={{ width: "100%" }}>
       {/* Tab Navigation */}
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          aria-label="basic tabs example"
+        >
           <Tab label="All" {...a11yProps(0)} />
           <Tab label="Archive" {...a11yProps(1)} />
           <Tab label="Personal" {...a11yProps(2)} />
@@ -155,7 +176,9 @@ export function BasicTabs() {
                 onChange={(event) => setText(event.target.value)}
                 required
               />
-              <button type="submit" className="button">Add Note</button>
+              <button type="submit" className="button">
+                Add Note
+              </button>
             </form>
           </div>
 
@@ -190,10 +213,15 @@ export function BasicTabs() {
                         <EditIcon />
                       </button>
                       <button onClick={() => abort(note.id)}>x</button>
-                      <ColorChips/>
                     </div>
                     <h2>{note.title}</h2>
                     <p>{note.content}</p>
+                    {/* Display the formatted date */}
+                    <Chip
+                      label={note.date}
+                      color="success"
+                      sx={{ position: "absolute", bottom: 0, ml: 26 }}
+                    />
                   </div>
                 )}
               </div>
@@ -209,7 +237,7 @@ export function BasicTabs() {
             <div className="note-item" key={note.id}>
               <h2>{note.title}</h2>
               <p>{note.content}</p>
-              <AutorenewIcon onClick= {() =>revokeArchive(note.id)}/>
+              <AutorenewIcon onClick={() => revokeArchive(note.id)} />
             </div>
           ))}
         </div>
@@ -223,6 +251,5 @@ export function BasicTabs() {
   );
 }
 
-
 //if we store adding the note and editing the note in the same useState then while editing it will be displayed in
-//text input field. 
+//text input field.
